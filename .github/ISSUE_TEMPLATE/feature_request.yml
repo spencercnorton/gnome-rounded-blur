@@ -1,0 +1,16 @@
+name: Feature request
+description: Suggest a change to the packaging or to this fork's small patches.
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What you are trying to do, and why the current package gets in the way.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you propose
+      description: A change to the blur effect itself is usually best proposed upstream first.

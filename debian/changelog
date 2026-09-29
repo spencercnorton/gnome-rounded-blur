@@ -1,0 +1,10 @@
+gnome-rounded-blur (1.0.0-2) resolute; urgency=medium
+
+  * First release from github.com/spencercnorton/gnome-rounded-blur, on
+    upstream f3bfcc7 with its anti-aliased corner mask.
+  * Build against the installed mutter ABI instead of a hardcoded one.
+  * Reset the cached texture size and content when the effect moves to
+    another actor.
+  * Restore the gnome-shell copyright line on the files derived from it.
+
+ -- Norvi <apt@globalentry.systems>  Tue, 29 Sep 2026 00:00:00 +0000

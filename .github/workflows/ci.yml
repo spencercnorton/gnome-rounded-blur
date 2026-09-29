@@ -1,0 +1,64 @@
+# Build and test on every pull request and on main, on the supported Ubuntu
+# 26.04: the fork's source invariants, two clean package builds that must be
+# byte-identical, the mutter ABI dependency, and a GJS load of the installed
+# typelib. No secrets, read-only token, GitHub-owned actions pinned by commit.
+name: CI
+on:
+  workflow_call:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    container: ubuntu:26.04@sha256:da6fc2be547864451aa253836dd926da33623312df4a9a243e35dc877c378a78
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - name: Container prerequisites
+        run: |
+          apt-get update -qq
+          apt-get install -y -qq --no-install-recommends git ca-certificates build-essential \
+            meson ninja-build pkg-config libglib2.0-dev gobject-introspection \
+            libgirepository1.0-dev libmutter-18-dev debhelper dpkg-dev fakeroot gjs
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Source invariants
+        run: sh tests/check-source.sh
+      - name: Build the package twice from clean copies
+        run: |
+          git config --system --add safe.directory "$GITHUB_WORKSPACE"
+          SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)
+          export SOURCE_DATE_EPOCH
+          for n in one two; do
+            mkdir -p "/tmp/$n/src"
+            git archive HEAD | tar -x -C "/tmp/$n/src"
+            (cd "/tmp/$n/src" && dpkg-buildpackage -us -uc -b -rfakeroot)
+          done
+          cmp /tmp/one/gnome-rounded-blur_*_amd64.deb /tmp/two/gnome-rounded-blur_*_amd64.deb
+          mkdir -p dist
+          cp /tmp/one/gnome-rounded-blur_*_amd64.deb dist/
+      - name: Check the package
+        run: |
+          deb=$(ls dist/*.deb)
+          dpkg-deb -f "$deb" Depends | grep -E 'libmutter-[0-9]+-0'
+          dpkg-deb -c "$deb" | grep -F 'girepository-1.0/Blur-1.0.typelib'
+          apt-get install -y -qq "./$deb"
+          M=$(dirname "$(ls /usr/lib/*/mutter-*/Clutter-*.typelib | head -1)")
+          GI_TYPELIB_PATH="$M" LD_LIBRARY_PATH="$M" gjs tests/smoke.js
+          cd dist && sha256sum *.deb > SHA256SUMS.txt
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: gnome-rounded-blur-debian-candidate
+          path: dist/
+          if-no-files-found: error
+          retention-days: 14

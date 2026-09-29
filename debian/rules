@@ -1,0 +1,33 @@
+#!/usr/bin/make -f
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# Mutter ABI to build against, derived from whatever libmutter-*-dev is installed
+# in the build environment rather than hardcoded. A GNOME bump then needs only a
+# rebuild against the new -dev package, not a source edit.
+MUTTER_API := $(shell pkg-config --list-all 2>/dev/null | \
+                sed -n 's/^mutter-clutter-\([0-9]\+\) .*/\1/p' | sort -rn | head -1)
+
+# The mutter clutter/cogl sonames live in a private directory owned by
+# libmutter-<N>-0, not on the default linker path, so dh_shlibdeps cannot find
+# them unaided and would fail rather than emit the ABI dependency we rely on.
+MUTTER_LIBDIR := /usr/lib/$(DEB_HOST_MULTIARCH)/mutter-$(MUTTER_API)
+
+%:
+	dh $@ --buildsystem=meson
+
+override_dh_auto_configure:
+	@if [ -z "$(MUTTER_API)" ]; then \
+		echo "E: no mutter-clutter-<N>.pc found; install libmutter-<N>-dev" >&2; \
+		exit 1; \
+	fi
+	@echo "I: building against mutter ABI $(MUTTER_API)"
+	dh_auto_configure -- -Dmutter_api_version=$(MUTTER_API)
+
+override_dh_shlibdeps:
+	dh_shlibdeps -l$(MUTTER_LIBDIR)
+
+# Single runtime package: the .so is a GI target loaded by gnome-shell, never
+# linked against at build time, so there is no -dev split and no symbols file.
+override_dh_makeshlibs:
+	dh_makeshlibs --no-scripts

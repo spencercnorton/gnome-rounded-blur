@@ -1,0 +1,33 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: gnome-rounded-blur
+Upstream-Contact: https://github.com/kancko/gnome-rounded-blur
+Source: https://github.com/spencercnorton/gnome-rounded-blur
+
+Files: *
+Copyright: 2026 kancko and contributors
+License: GPL-3.0-or-later
+
+Files: src/rounded-blur-effect.c src/rounded-blur-effect.h
+Copyright: 2019 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+           2025 GNOME Rounded Blur
+License: GPL-3.0-or-later
+Comment:
+ Derived from gnome-shell's src/shell-blur-effect.{c,h}, extended with
+ corner-mask clipping and exported under the "Blur" GIR namespace.
+
+Files: debian/* meson_options.txt tests/* .github/* scripts/* README.md CHANGELOG.md NOTICE CONTRIBUTING.md SECURITY.md SUPPORT.md
+Copyright: 2026 Spencer Norton
+License: GPL-3.0-or-later
+
+License: GPL-3.0-or-later
+ This program is free software: you can redistribute it and/or modify it under
+ the terms of the GNU General Public License as published by the Free Software
+ Foundation, either version 3 of the License, or (at your option) any later
+ version.
+ .
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ .
+ On Debian systems, the complete text of the GNU General Public License
+ version 3 can be found in "/usr/share/common-licenses/GPL-3".

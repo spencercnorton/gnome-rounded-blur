@@ -1,0 +1,16 @@
+GNOME Rounded Blur, Ubuntu packaging
+https://github.com/spencercnorton/gnome-rounded-blur
+
+This repository is a downstream of kancko/gnome-rounded-blur
+(https://github.com/kancko/gnome-rounded-blur), based on upstream commit
+f3bfcc796e1214c1e1d4287ee35cb132ad8133f0, whose history it keeps unchanged.
+
+src/rounded-blur-effect.c and src/rounded-blur-effect.h derive from
+gnome-shell's src/shell-blur-effect.c and .h, Copyright 2019 Georges Basile
+Stavracas Neto, extended upstream with a corner mask and exported under the
+"Blur" GObject Introspection namespace.
+
+Everything here is licensed under the GNU General Public License, version 3
+or (at your option) any later version; see LICENSE. The Debian packaging,
+tests, CI and the changes listed in the README are Copyright 2026 Spencer
+Norton under the same licence.

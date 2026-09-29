@@ -1,0 +1,4 @@
+option('mutter_api_version',
+  type: 'string',
+  value: '18',
+  description: 'Mutter ABI version to build against (18 = GNOME 50)')

@@ -1,5 +1,6 @@
 /* rounded-blur-effect.h
  *
+ * Copyright 2019 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  * Copyright 2025 GNOME Rounded Blur
  *
  * This program is free software: you can redistribute it and/or modify

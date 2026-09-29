@@ -1,0 +1,9 @@
+build/
+obj-*/
+dist/
+debian/.debhelper/
+debian/files
+debian/gnome-rounded-blur/
+debian/*.substvars
+debian/*.log
+debian/debhelper-build-stamp

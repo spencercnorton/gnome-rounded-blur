@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/spencercnorton/gnome-rounded-blur/security/advisories/new
+    about: Report privately through GitHub's vulnerability reporting. Please do not open a public issue.
+  - name: A problem in the blur effect itself
+    url: https://github.com/kancko/gnome-rounded-blur/issues
+    about: The effect's code comes from upstream; issues that are not about the Ubuntu package belong there.
+  - name: NorviOS
+    url: https://github.com/spencercnorton/norvi-os
+    about: The desktop this library is part of.

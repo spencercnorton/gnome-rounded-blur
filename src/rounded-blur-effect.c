@@ -1,5 +1,6 @@
 /* rounded-blur-effect.c
  *
+ * Copyright 2019 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  * Copyright 2025 GNOME Rounded Blur
  *
  * This program is free software: you can redistribute it and/or modify
@@ -396,6 +397,13 @@ gb_blur_effect_set_actor (ClutterActorMeta *meta,
   clear_framebuffer_data (&self->background_fb);
   clear_framebuffer_data (&self->brightness_fb);
   clear_framebuffer_data (&self->mask_fb);
+
+  /* A new actor must not reuse the old one's cached content, or its texture
+   * size to decide whether the framebuffers still fit. */
+  self->cache_flags = 0;
+  self->tex_width = 0;
+  self->tex_height = 0;
+  self->downscale_factor = 1.f;
 
   /* we keep a back pointer here, to avoid going through the ActorMeta */
   self->actor = clutter_actor_meta_get_actor (meta);
